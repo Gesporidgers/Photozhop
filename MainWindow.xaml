@@ -1,0 +1,80 @@
+﻿<Window x:Name="window" x:Class="Photozhop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Photozhop"
+        xmlns:viewmodel="clr-namespace:Photozhop.Models"
+        mc:Ignorable="d"
+        Title="Фотошоп курильщика" Height="750" Width="1000">
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top">
+            <Button Content="Добавить" Command="{Binding OpenCommand}"/>
+            <Button Content="Сохранить результат" Command="{Binding SaveCommand}"/>
+            <Separator/>
+            <Button Content="Закрыть программу" Click="Button_Click"/>
+
+        </ToolBar>
+        <Grid DockPanel.Dock="Top">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="340"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Image x:Name="preview" Grid.Column="0" Source="{Binding ResultImage}"></Image>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Height="722" VerticalAlignment="Center" Width="2" Background="#FF7B7B7B"/>
+            <ScrollViewer Grid.Column="1">
+
+                <ItemsControl ItemsSource="{Binding Bitmaps}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0" Margin="0 5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="105"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.Column="0" Source="{Binding Bitmap}" Width="100" Height="100"></Image>
+                                    <Grid Grid.Column="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" ></RowDefinition>
+                                            <RowDefinition Height="43"></RowDefinition>
+                                            <RowDefinition Height="*"></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <Label Grid.Row="0" Content="{Binding Path=Name}"></Label>
+                                        <ComboBox Grid.Row="1" Margin="0 5 15 15" ItemsSource="{Binding Path=DataContext.operations, RelativeSource={RelativeSource AncestorType=Window}}" DisplayMemberPath="Name" SelectedValue="{Binding SelectedOperation}"/>
+                                        <Slider TickFrequency="1" Margin="0 0 13 0" Grid.Row="2" Minimum="0" Maximum="100" Value="{Binding Path=Opacity}"/>
+                                    </Grid>
+                                </Grid>
+                                
+                                <!--<Grid Grid.Column="1" Margin="0 5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Button Grid.Row="0" Command="{Binding Path=DataContext.MoveUpCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}">/\</Button>
+                                    <Button Grid.Row="1" Command="{Binding Path=DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}">X</Button>
+                                    <Button Grid.Row="2" Command="{Binding Path=DataContext.MoveDownCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}">\/</Button>
+                                </Grid>-->
+                                <Grid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Слой вверх" Click="MoveUp"></MenuItem>
+                                        <MenuItem Header="Слой вниз" Click="MoveDown"></MenuItem>
+                                        <Separator/>
+                                        <MenuItem Header="Удалить слой" Click="MenuItem_Click"></MenuItem>
+                                    </ContextMenu>
+                                </Grid.ContextMenu>
+                                
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+</Window>
