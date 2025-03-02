@@ -79,6 +79,7 @@ namespace Photozhop.Models
 				return openCommand ??= new RelayCommand(t => true, (obj) =>
 				{
 					OpenFileDialog openFileDialog = new OpenFileDialog();
+					openFileDialog.Filter = "Изображения (*png; *jpg)|*png; *jpg";
 					if (openFileDialog.ShowDialog() == true)
 					{
 						AddImage(new ImageModel { Bitmap = new BitmapImage(new Uri(openFileDialog.FileName)), Name = openFileDialog.SafeFileName });
@@ -94,6 +95,8 @@ namespace Photozhop.Models
 				return saveCommand ??= new RelayCommand(t => Bitmaps.Count != 0, (obj) =>
 				{
 					SaveFileDialog fileDialog = new SaveFileDialog();
+					fileDialog.DefaultExt = ".png";
+					fileDialog.Filter = "Изображения (*png)|*png";
 					if ((bool)fileDialog.ShowDialog())
 					{
 						using(var fs = new FileStream(fileDialog.FileName, FileMode.Create))
