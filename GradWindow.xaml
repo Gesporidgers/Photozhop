@@ -1,0 +1,35 @@
+﻿<Window x:Class="Photozhop.GradWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Photozhop"
+        xmlns:viewmodel="clr-namespace:Photozhop.Models"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"  
+        mc:Ignorable="d"
+        Title="GradWindow" Height="800" Width="1200">
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="500"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" MaxHeight="710" Source="{Binding Image}"></Image>
+            <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Height="725" Width="1.25"/>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="100"></RowDefinition>
+
+                </Grid.RowDefinitions>
+                <WindowsFormsHost Width="500" Height="500">
+                    <wf:PictureBox x:Name="pictureBox" Dock="Fill" SizeMode="StretchImage" MouseDown="pictureBox_MouseDown" ></wf:PictureBox>
+                </WindowsFormsHost>
+            </Grid>
+        </Grid>
+        <StackPanel Margin="0 0 0 10" DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <Button Content="Apply" Margin="10 0 20 0" Width="60"></Button>
+            <Button Content="Cancel" Width="60" Click="CloseApply"></Button>
+        </StackPanel>
+    </DockPanel>
+</Window>

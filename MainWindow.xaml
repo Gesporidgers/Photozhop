@@ -22,7 +22,7 @@
                 <ColumnDefinition Width="340"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Image x:Name="preview" Grid.Column="0" Source="{Binding ResultImage}"></Image>
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Height="722" VerticalAlignment="Center" Width="2" Background="#FF7B7B7B"/>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Left" Height="Auto" Width="1.25"/>
             <ScrollViewer Grid.Column="1">
 
                 <ItemsControl ItemsSource="{Binding Bitmaps}">
@@ -67,6 +67,8 @@
                                         <MenuItem Header="Слой вниз" Click="MoveDown"></MenuItem>
                                         <Separator/>
                                         <MenuItem Header="Удалить слой" Click="MenuItem_Click"></MenuItem>
+                                        <Separator/>
+                                        <MenuItem Header="Кривые" Click="OpenGrad"></MenuItem>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
                                 

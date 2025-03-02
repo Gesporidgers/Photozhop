@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace Photozhop.Models
 {
-	class ImageModel : BindHelper
+	public class ImageModel : BindHelper
 	{
 		private string _name;
 		private double _opacity = 1;
