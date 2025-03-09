@@ -22,20 +22,22 @@ namespace Photozhop
     public partial class GradWindow : Window
     {
 		private GradBrainVM vm;
-		public GradWindow(ImageModel sourceImage)
+		private Bitmap curve = new Bitmap(512, 512);
+		public GradWindow(ref ImageModel sourceImage)
 		{
-			vm = new GradBrainVM { Image = sourceImage.Bitmap, Bytes = sourceImage.Bytes };
+			vm = new GradBrainVM (ref sourceImage);
 			DataContext = vm;
 			InitializeComponent();
-			pictureBox.Image = vm.curve;
-			using Graphics g = Graphics.FromImage(vm.curve);
+			pictureBox.Image = curve;
+			using Graphics g = Graphics.FromImage(curve);
 
 			var p = Pens.Black.Clone() as System.Drawing.Pen;
 			p.Width = 1;
 
-			g.DrawLine(p, 0, 0, 0, 500);
-			g.DrawLine(p, 0, 499, 500, 499);
-
+			g.DrawLine(p, 0, 0, 0, 500);      // y
+			g.DrawLine(p, 0, 499, 500, 499); // x
+			g.DrawLines(p, vm.GetPoints());
+			
 			pictureBox.Refresh(); p.Dispose();
 		}
 
@@ -47,11 +49,28 @@ namespace Photozhop
 
 		private void pictureBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
-			using Graphics g = Graphics.FromImage(vm.curve);
-			g.FillEllipse(System.Drawing.Brushes.Black, e.X, e.Y, 5, 5);
+			vm.points.Add(new PointF(e.X / 512f, (512f -e.Y) / 512f));
+			curve = new Bitmap(512, 512);
+			Graphics g = Graphics.FromImage(curve);
+			
+			Redraw(ref g);
+			
+			pictureBox.Image = curve;
 			pictureBox.Refresh();
 		}
 
-
+		private void Redraw(ref Graphics g)
+		{
+			var p = Pens.Black.Clone() as System.Drawing.Pen;
+			var pEllipse = Pens.Black.Clone() as System.Drawing.Pen;
+			p.Width = 1;
+			pEllipse.Width = 2;
+			g.DrawLine(p, 0, 0, 0, 500);      // y
+			g.DrawLine(p, 0, 499, 500, 499); // x
+			g.DrawLines(p, vm.GetPoints());
+			foreach (var point in vm.GetPoints()) 
+				g.DrawEllipse(pEllipse, point.X, point.Y, 5, 5);
+			p.Dispose();
+		}
 	}
 }

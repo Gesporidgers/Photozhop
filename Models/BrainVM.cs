@@ -193,8 +193,7 @@ namespace Photozhop.Models
 				}
 			});
 			BitmapSource res = BitmapSource.Create(max_width, max_height, 96, 96, PixelFormats.Bgra32, null, bytes, max_width * 4);
-			Array.Resize(ref bytes, 1);		//для памяти
-			Array.Clear(bytes, 0, 1);
+			bytes = Array.Empty<byte>();
 			res.Freeze();
 			ResultImage = res;
 		}

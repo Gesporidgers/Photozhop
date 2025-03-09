@@ -79,7 +79,7 @@ namespace Photozhop
 			var tmp = e.Source as MenuItem;
 			var par = tmp.DataContext as ImageModel;
 			//var ii = vm.Bitmaps.IndexOf(par);
-			GradWindow gradWindow = new GradWindow(par);
+			GradWindow gradWindow = new GradWindow(ref par);
 			gradWindow.ShowDialog();
 		}
 	}
