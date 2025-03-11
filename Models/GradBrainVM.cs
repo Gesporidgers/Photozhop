@@ -84,6 +84,15 @@ namespace Photozhop.Models
 				beta[i] = Fs[i] - beta[i] * (As[i, 0] / alpha[i - 1]);
 			}
 
+			float[] c = new float[lstPoints.Count - 1];
+			float[] a = (from p in lstPoints
+						select p.Y).ToArray();
+			float[] b = new float[lstPoints.Count - 1];
+			float[] d = new float[lstPoints.Count - 1];
+			c[c.Length] = beta.Last() / alpha.Last();
+			for (int i = c.Length - 1; i > -1; i--)
+				c[i] = (beta[i] - As[i, 2] * c[i + 1]) / alpha[i];
+
 
 		}
 
