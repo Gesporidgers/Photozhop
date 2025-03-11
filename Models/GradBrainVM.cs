@@ -19,6 +19,7 @@ namespace Photozhop.Models
 		private Bitmap _histo;
 
 		private byte[] _bytes;
+		private PointF[] InterpolatedPoints;
 		public ObservableCollection<PointF> points;
 		public BitmapSource Image
 		{
@@ -50,20 +51,34 @@ namespace Photozhop.Models
 			points = new ObservableCollection<PointF>();
 			points.Add(new PointF(0, 0));
 			InterpolatePoints();
-			points.CollectionChanged += (s, e) => InterpolatePoints();
+			points.CollectionChanged += (s, e) => InterpolatePoints(); // Возможно надо убрать
 		}
 
-		private void InterpolatePoints()
+		private void InterpolatePoints()		// Сделать костыль на добавление элемента
 		{
-			
+			InterpolatedPoints = new PointF[100];
+			List<PointF> lstPoints = points.ToList();
+			lstPoints.Add(new PointF(1f, 1f));
+			float[] Hs = new float[lstPoints.Count];
+			float[,] As = new float[Hs.Length - 1, 3];
+			float[] Fs = new float[Hs.Length - 1];
+			for (int i = 0; i < Hs.Length; i++)
+				Hs[i] = lstPoints[i + 1].X - lstPoints[i].X;
+			for (int i = 0; i < Hs.Length - 1; i++)
+			{
+				As[i, 0] = Hs[i];
+				As[i, 1] = 2 * (Hs[i] + Hs[i + 1]);
+				As[i, 2] = Hs[i + 1];
+			}
 		}
 
-		public PointF[] GetPoints()
+		public Point[] GetPoints(int k)
 		{
-			PointF[] ps = new PointF[points.Count+1];
-			for(int i  = 0; i < ps.Length-1; i++) 
-				ps[i] =new PointF(points[i].X*500f,(1f-points[i].Y)*500f);
-			ps[points.Count] = new PointF(500f,0f);
+			Point[] ps = new Point[InterpolatedPoints.Length];
+			for (int i = 0; i < InterpolatedPoints.Length; i++)
+			{
+				ps[i] = new Point((int)(InterpolatedPoints[i].X * k), (int)(InterpolatedPoints[i].Y * k));
+			}
 			return ps;
 		}
 	}
