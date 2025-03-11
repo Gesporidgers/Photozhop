@@ -36,7 +36,7 @@ namespace Photozhop
 
 			g.DrawLine(p, 0, 0, 0, 500);      // y
 			g.DrawLine(p, 0, 499, 500, 499); // x
-			g.DrawLines(p, vm.GetPoints());
+			//g.DrawLines(p, vm.GetPoints());
 			
 			pictureBox.Refresh(); p.Dispose();
 		}
@@ -67,9 +67,9 @@ namespace Photozhop
 			pEllipse.Width = 2;
 			g.DrawLine(p, 0, 0, 0, 500);      // y
 			g.DrawLine(p, 0, 499, 500, 499); // x
-			g.DrawLines(p, vm.GetPoints());
-			foreach (var point in vm.GetPoints()) 
-				g.DrawEllipse(pEllipse, point.X, point.Y, 5, 5);
+			//g.DrawLines(p, vm.GetPoints());
+			//foreach (var point in vm.GetPoints()) 
+			//	g.DrawEllipse(pEllipse, point.X, point.Y, 5, 5);
 			p.Dispose();
 		}
 	}
