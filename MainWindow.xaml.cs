@@ -56,7 +56,7 @@ namespace Photozhop
 			var tmp = e.Source as MenuItem;
 			var par = tmp.DataContext as ImageModel;
 			var ii = vm.Bitmaps.IndexOf(par);
-			if (ii + 1 < vm.Bitmaps.Count - 1)
+			if (ii + 1 < vm.Bitmaps.Count)
 			{
 				vm.Bitmaps.Move(ii, ii + 1);
 			}
