@@ -62,7 +62,7 @@ namespace Photozhop.Models
 			float[] Hs = new float[lstPoints.Count];
 			float[,] As = new float[Hs.Length - 1, 3];
 			float[] Fs = new float[Hs.Length - 1];
-			for (int i = 0; i < Hs.Length; i++)
+			for (int i = 0; i < Hs.Length; i++)			// Maybe Parallel?
 				Hs[i] = lstPoints[i + 1].X - lstPoints[i].X;
 			for (int i = 1; i < Hs.Length - 1; i++)
 			{
