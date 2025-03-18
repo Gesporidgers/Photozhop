@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using System.Windows.Media.Imaging;
 using Photozhop.Utility;
+using MathNet.Numerics.LinearAlgebra;
 
 
 namespace Photozhop.Models
@@ -64,35 +65,49 @@ namespace Photozhop.Models
 			for (int i = 1; i < Hs.Length; i++)     // Maybe Parallel?
 			{
 				As[i - 1, 0] = Hs[i];
-				As[i - 1, 1] = 2 * (Hs[i-1] + Hs[i]);
+				As[i - 1, 1] = 2 * (Hs[i - 1] + Hs[i]);
 				As[i - 1, 2] = Hs[i];
 				float y0 = lstPoints[i - 1].Y;
 				float y1 = lstPoints[i].Y;
 				float y2 = lstPoints[i + 1].Y;
-				Fs[i-1] = 6 * (((y2 - y1) / Hs[i]) - ((y1 - y0) / Hs[i-1]));
+				Fs[i - 1] = 6 * (((y2 - y1) / Hs[i]) - ((y1 - y0) / Hs[i - 1]));
 			}
+			As[0, 0] = 0;
+			/*var A = Matrix<float>.Build.DenseOfArray(As);
+			var f = Vector<float>.Build.Dense(Fs);
 
+			var c = A.Solve(f).ToArray();*/
 			float[] alpha = new float[Hs.Length];
 			float[] beta = new float[Hs.Length];
+			Array.Clear(alpha, 0, alpha.Length);
+			Array.Clear(beta, 0, beta.Length);
 			alpha[0] = As[0, 1]; beta[0] = Fs[0];
 			if (Hs.Length > 2)
 			{
 				for (int i = 1; i < alpha.Length; i++)
 				{
 					alpha[i] = (As[i, 1] * As[i - 1, 2]) / alpha[i - 1];
-					beta[i] = Fs[i] - beta[i] * (As[i, 0] / alpha[i - 1]);
+					beta[i] = Fs[i] - beta[i - 1] * (As[i, 0] / alpha[i - 1]);
 				}
 			}
 
-			float[] c = new float[lstPoints.Count - 1];
+			float[] c = new float[lstPoints.Count];
+
+
+			if (beta.Last() == 0 || alpha.Last() == 0)
+				c[c.Length - 1] = 0;
+			else
+				c[c.Length - 1] = beta.Last() / alpha.Last();
+			if (As.GetUpperBound(0) == 0)
+				c[c.Length - 2] = 0;
+			else
+				for (int i = c.Length - 2; i > -1; i--)
+					c[i] = (beta[i] - As[i, 2] * c[i + 1]) / alpha[i];
 			float[] a = (from p in lstPoints
 						 where p != lstPoints.First()
 						 select p.Y).ToArray();
 			float[] b = new float[lstPoints.Count - 1];
 			float[] d = new float[lstPoints.Count - 1];
-			c[c.Length-1] = beta.Last() / alpha.Last();
-			for (int i = c.Length - 2; i > -1; i--)
-				c[i] = (beta[i] - As[i, 2] * c[i + 1]) / alpha[i];
 			for (int i = 1; i < b.Length; i++)
 			{
 				b[i] = (((lstPoints[i].Y - lstPoints[i - 1].Y) / Hs[i])) + (c[i] * Hs[i] / 3f) + (c[i - 1] * Hs[i] / 6);
@@ -125,22 +140,22 @@ namespace Photozhop.Models
 			InterpolatedPoints = new PointF[100];
 			for (int i = 0; i < 100; i++)
 			{
-				if (intervals[j].InRange(i / 99))
+				if (intervals[j].InRange(i / 100f))
 				{
-					float tmpY = intervals[j].A + intervals[j].B * (i / 99 - intervals[j].start) + intervals[j].C * 0.5f * (i / 99 - intervals[j].start) * (i / 99 - intervals[j].start) + (intervals[j].D / 6f) * (i / 99 - intervals[j].start) * (i / 99 - intervals[j].start) * (i / 99 - intervals[j].start);
-					InterpolatedPoints[i] = new PointF(i / 99, tmpY);
+					float tmpY = intervals[j].A + intervals[j].B * (i / 100f - intervals[j].start) + intervals[j].C * 0.5f * (i / 100f - intervals[j].start) * (i / 100f - intervals[j].start) + (intervals[j].D / 6f) * (i / 100f - intervals[j].start) * (i / 100f - intervals[j].start) * (i / 100f - intervals[j].start);
+					InterpolatedPoints[i] = new PointF(i / 100f, tmpY);
 				}
 				else j++;
 
 			}
 		}
 
-		public Point[] GetPoints(int k,bool invertY)
+		public Point[] GetPoints(int k, bool invertY)
 		{
 			Point[] ps = new Point[InterpolatedPoints.Length];
 			for (int i = 0; i < ps.Length; i++)
 			{
-				ps[i] = new Point((int)InterpolatedPoints[i].X*k, invertY? (1-(int)InterpolatedPoints[i].Y) * k : (int)InterpolatedPoints[i].Y * k);
+				ps[i] = new Point((int)InterpolatedPoints[i].X * k, invertY ? (1 - (int)InterpolatedPoints[i].Y) * k : (int)InterpolatedPoints[i].Y * k);
 			}
 			return ps;
 		}
