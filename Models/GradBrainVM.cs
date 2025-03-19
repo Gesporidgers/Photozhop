@@ -5,17 +5,18 @@ using System.Linq;
 using System;
 using System.Windows.Media.Imaging;
 using Photozhop.Utility;
+using System.Threading.Tasks;
 
 //using MathNet.Numerics.LinearAlgebra;
 
 
 namespace Photozhop.Models
 {
-	class GradBrainVM
+	class GradBrainVM : BindHelper
 	{
 		private ImageModel src;
 		private BitmapSource _image;
-		private Bitmap _histo;
+		private Bitmap _histo = new Bitmap(256, 100);
 
 		private byte[] _bytes;
 		private PointF[] InterpolatedPoints;
@@ -27,6 +28,7 @@ namespace Photozhop.Models
 			set
 			{
 				_image = value;
+				OnPropertyChanged(nameof(Image));
 			}
 		}
 
@@ -39,7 +41,7 @@ namespace Photozhop.Models
 			}
 		}
 
-		public Bitmap Histogram
+		public Bitmap Histo
 		{
 			get => _histo;
 		}
@@ -50,7 +52,13 @@ namespace Photozhop.Models
 			this.Bytes = src.Bytes;
 			points = new ObservableCollection<PointF>();
 			points.Add(new PointF(0, 0));
-			points.CollectionChanged += (s, e) => InterpolatePoints(); // Возможно надо убрать
+			updateHisto();
+			points.CollectionChanged += (s, e) =>
+			{
+				InterpolatePoints();
+				UpdateImage();
+				updateHisto();
+			};
 		}
 
 		private void InterpolatePoints()        // Сделать костыль на добавление элемента
@@ -164,13 +172,55 @@ namespace Photozhop.Models
 		public Point[] GetPoints(int k, bool invertY)
 		{
 			Point[] ps = new Point[InterpolatedPoints.Length];
-			for (int i = 0; i < ps.Length; i++)
+			Parallel.For(0, ps.Length, (i) =>
 			{
 				ps[i] = new Point((int)(InterpolatedPoints[i].X * k), invertY ? (int)((1 - InterpolatedPoints[i].Y) * k) : (int)(InterpolatedPoints[i].Y * k));
-				if (ps[i].X == 0 && i != 0)
-					throw new NotFiniteNumberException();
-			}
+				//if (ps[i].X == 0 && i != 0)
+				//	throw new NotFiniteNumberException();
+			});
+			//for (int i = 0; i < ps.Length; i++)
+			//{
+
+			//}
 			return ps;
+		}
+
+		public void UpdateImage()
+		{
+			Bytes = src.Bytes;
+			Point[] newPixelInt = GetPoints(255, false);
+			Parallel.For(0, Bytes.Length, (i) => { Bytes[i] = (byte)(newPixelInt[(int)Bytes[i]].Y); });
+			//for (int i = 0; i < Bytes.Length; i++)
+
+			Image = BitmapSource.Create(src.Width, src.Height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, Bytes, src.Width * 4);
+			src.Bitmap = Image;
+		}
+
+		public void updateHisto()
+		{
+			_histo = new Bitmap(256, 100);
+			int[] pixelIntensity = new int[256];
+			//for(int i = 0; i < 256; i++)
+			Parallel.For(0, src.Width * src.Height, (i) =>
+			{
+				int y = i / src.Width;
+				int x = i - y * src.Height;
+				int _i = y * src.Width + x;
+				if (x > 0 && x < src.Width && y > 0 && y < src.Height)
+				{
+					int avgInt = ((int)(Bytes[_i * 4]) + (int)(Bytes[_i * 4 + 1]) + (int)(Bytes[_i * 4 + 2])) / 3;
+					pixelIntensity[avgInt]++;
+				}
+
+			});
+			float k = 100f / pixelIntensity.Max();
+			Graphics g = Graphics.FromImage(Histo);
+			var p = Pens.Black.Clone() as System.Drawing.Pen;
+			p.Width = 1;
+			for (int i = 0; i < 256; i++)
+				g.DrawLine(p, i, 99, i, 99 - pixelIntensity[i] * k);
+			p.Dispose();
+			g.Dispose(); Bytes = Array.Empty<byte>();
 		}
 	}
 }

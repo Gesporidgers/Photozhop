@@ -23,12 +23,14 @@ namespace Photozhop
     {
 		private GradBrainVM vm;
 		private Bitmap curve = new Bitmap(512, 512);
+		
 		public GradWindow(ref ImageModel sourceImage)
 		{
 			vm = new GradBrainVM (ref sourceImage);
 			DataContext = vm;
 			InitializeComponent();
 			pictureBox.Image = curve;
+			hist.Image = vm.Histo;
 			using Graphics g = Graphics.FromImage(curve);
 
 			var p = Pens.Black.Clone() as System.Drawing.Pen;
@@ -38,7 +40,7 @@ namespace Photozhop
 			g.DrawLine(p, 0, 499, 500, 499); // x
 			g.DrawLine(p, 0, 512,512,0);
 			
-			pictureBox.Refresh(); p.Dispose();
+			pictureBox.Refresh(); p.Dispose(); hist.Refresh();
 		}
 
 		private void CloseApply(object sender, RoutedEventArgs e)
@@ -57,6 +59,8 @@ namespace Photozhop
 			
 			pictureBox.Image = curve;
 			pictureBox.Refresh();
+			hist.Image = vm.Histo;
+			hist.Refresh();
 		}
 
 		private void Redraw(ref Graphics g)
@@ -72,5 +76,6 @@ namespace Photozhop
 			g.DrawEllipse(pEllipse, point.X*500, 500-point.Y*500, 5, 5);
 			p.Dispose();
 		}
+
 	}
 }
