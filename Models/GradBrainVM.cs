@@ -5,7 +5,8 @@ using System.Linq;
 using System;
 using System.Windows.Media.Imaging;
 using Photozhop.Utility;
-using MathNet.Numerics.LinearAlgebra;
+
+//using MathNet.Numerics.LinearAlgebra;
 
 
 namespace Photozhop.Models
@@ -84,9 +85,9 @@ namespace Photozhop.Models
 			alpha[0] = As[0, 1]; beta[0] = Fs[0];
 			if (Hs.Length > 2)
 			{
-				for (int i = 1; i < alpha.Length; i++)
+				for (int i = 1; i < alpha.Length - 1; i++)
 				{
-					alpha[i] = (As[i, 1] * As[i - 1, 2]) / alpha[i - 1];
+					alpha[i] = As[i, 1] - (As[i, 0] * As[i - 1, 2]) / alpha[i - 1];
 					beta[i] = Fs[i] - beta[i - 1] * (As[i, 0] / alpha[i - 1]);
 				}
 			}
@@ -97,28 +98,32 @@ namespace Photozhop.Models
 			if (beta.Last() == 0 || alpha.Last() == 0)
 				c[c.Length - 1] = 0;
 			else
-				c[c.Length - 1] = beta.Last() / alpha.Last();
+				c[c.Length - 1] = beta[beta.Length - 2] / alpha[alpha.Length - 2];
 			if (As.GetUpperBound(0) == 0)
-				c[c.Length - 2] = 0;
+				c[c.Length - 2] = (beta[0] - As[0, 2] * c[1]) / alpha[0];
 			else
-				for (int i = c.Length - 2; i > -1; i--)
-					c[i] = (beta[i] - As[i, 2] * c[i + 1]) / alpha[i];
+			{
+				c[c.Length - 2] = beta[beta.Length - 2] / alpha[alpha.Length - 2];
+				for (int i = c.Length - 3; i > 0; i--)
+					c[i] = (beta[i - 1] - As[i - 1, 2] * c[i + 1]) / alpha[i - 1];
+			}
 			float[] a = (from p in lstPoints
 						 where p != lstPoints.First()
 						 select p.Y).ToArray();
+			float[] _c = c.Skip(1).ToArray();
 			float[] b = new float[lstPoints.Count - 1];
 			float[] d = new float[lstPoints.Count - 1];
-			for (int i = 1; i < b.Length; i++)
+			for (int i = 0; i < b.Length; i++)
 			{
-				b[i] = (((lstPoints[i].Y - lstPoints[i - 1].Y) / Hs[i])) + (c[i] * Hs[i] / 3f) + (c[i - 1] * Hs[i] / 6);
-				d[i] = (c[i] - c[i - 1]) / Hs[i];
+				b[i] = (((lstPoints[i + 1].Y - lstPoints[i].Y) / Hs[i])) + (c[i + 1] * Hs[i] / 3f) + (c[i] * Hs[i] / 6);
+				d[i] = (c[i + 1] - c[i]) / Hs[i];
 			}
 			intervals = (from i in Enumerable.Range(0, a.Length)
 						 select new InterpolatedInterval
 						 {
 							 A = a[i],
 							 B = b[i],
-							 C = c[i],
+							 C = _c[i],
 							 D = d[i],
 							 start = lstPoints[i].X,
 							 end = lstPoints[i + 1].X
@@ -136,17 +141,23 @@ namespace Photozhop.Models
 			//	intervals[i].start = lstPoints[i].X;
 			//	intervals[i].end = lstPoints[i + 1].X;
 			//}
-			uint j = 0;
-			InterpolatedPoints = new PointF[100];
-			for (int i = 0; i < 100; i++)
+			uint j = 0; uint ii = 0;
+			InterpolatedPoints = new PointF[256];
+			for (float i = 0f; i < 1f; i += 0.00390625f)
 			{
-				if (intervals[j].InRange(i / 100f))
+				if (intervals[j].InRange(i))
 				{
-					float tmpY = intervals[j].A + intervals[j].B * (i / 100f - intervals[j].start) + intervals[j].C * 0.5f * (i / 100f - intervals[j].start) * (i / 100f - intervals[j].start) + (intervals[j].D / 6f) * (i / 100f - intervals[j].start) * (i / 100f - intervals[j].start) * (i / 100f - intervals[j].start);
-					InterpolatedPoints[i] = new PointF(i / 100f, tmpY);
+					float tmpY = intervals[j].A + intervals[j].B * (i - intervals[j].end) + intervals[j].C * 0.5f * (i - intervals[j].end) * (i - intervals[j].end) + (intervals[j].D / 6f) * (i - intervals[j].end) * (i - intervals[j].end) * (i - intervals[j].end);
+					InterpolatedPoints[ii] = new PointF(i, tmpY);
 				}
-				else j++;
+				else
+				{
+					j++;
+					float tmpY = intervals[j].A + intervals[j].B * (i - intervals[j].end) + intervals[j].C * 0.5f * (i - intervals[j].end) * (i - intervals[j].end) + (intervals[j].D / 6f) * (i - intervals[j].end) * (i - intervals[j].end) * (i - intervals[j].end);
+					InterpolatedPoints[ii] = new PointF(i, tmpY);
+				}
 
+				ii++;
 			}
 		}
 
@@ -155,7 +166,9 @@ namespace Photozhop.Models
 			Point[] ps = new Point[InterpolatedPoints.Length];
 			for (int i = 0; i < ps.Length; i++)
 			{
-				ps[i] = new Point((int)InterpolatedPoints[i].X * k, invertY ? (1 - (int)InterpolatedPoints[i].Y) * k : (int)InterpolatedPoints[i].Y * k);
+				ps[i] = new Point((int)(InterpolatedPoints[i].X * k), invertY ? (int)((1 - InterpolatedPoints[i].Y) * k) : (int)(InterpolatedPoints[i].Y * k));
+				if (ps[i].X == 0 && i != 0)
+					throw new NotFiniteNumberException();
 			}
 			return ps;
 		}

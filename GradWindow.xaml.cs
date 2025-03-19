@@ -69,7 +69,7 @@ namespace Photozhop
 			g.DrawLine(p, 0, 499, 500, 499); // x
 			g.DrawLines(p, vm.GetPoints(500,true));
 			foreach (var point in vm.points) 
-			g.DrawEllipse(pEllipse, point.X, point.Y, 5, 5);
+			g.DrawEllipse(pEllipse, point.X*500, 500-point.Y*500, 5, 5);
 			p.Dispose();
 		}
 	}

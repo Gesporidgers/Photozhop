@@ -99,12 +99,10 @@ namespace Photozhop.Models
 					fileDialog.Filter = "Изображения (*png)|*png";
 					if ((bool)fileDialog.ShowDialog())
 					{
-						using(var fs = new FileStream(fileDialog.FileName, FileMode.Create))
-						{
-							BitmapEncoder bitmapEncoder = new PngBitmapEncoder();
-							bitmapEncoder.Frames.Add(BitmapFrame.Create(ResultImage));
-							bitmapEncoder.Save(fs);
-						}
+						using var fs = new FileStream(fileDialog.FileName, FileMode.Create);
+						BitmapEncoder bitmapEncoder = new PngBitmapEncoder();
+						bitmapEncoder.Frames.Add(BitmapFrame.Create(ResultImage));
+						bitmapEncoder.Save(fs);
 					}
 				});
 			}
