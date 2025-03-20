@@ -46,17 +46,17 @@ namespace Photozhop
 		private void CloseApply(object sender, RoutedEventArgs e)
 		{
 			this.Close();
-
 		}
 
 		private void pictureBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			vm.points.Add(new PointF(e.X / 512f, (512f -e.Y) / 512f));
+			curve.Dispose();
 			curve = new Bitmap(512, 512);
 			Graphics g = Graphics.FromImage(curve);
 			
 			Redraw(ref g);
-			
+			g.Dispose();
 			pictureBox.Image = curve;
 			pictureBox.Refresh();
 			hist.Image = vm.Histo;
@@ -74,7 +74,7 @@ namespace Photozhop
 			g.DrawLines(p, vm.GetPoints(500,true));
 			foreach (var point in vm.points) 
 			g.DrawEllipse(pEllipse, point.X*500, 500-point.Y*500, 5, 5);
-			p.Dispose();
+			p.Dispose(); pEllipse.Dispose();
 		}
 
 	}

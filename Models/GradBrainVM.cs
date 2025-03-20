@@ -191,13 +191,14 @@ namespace Photozhop.Models
 			Point[] newPixelInt = GetPoints(255, false);
 			Parallel.For(0, Bytes.Length, (i) => { Bytes[i] = (byte)(newPixelInt[(int)Bytes[i]].Y); });
 			//for (int i = 0; i < Bytes.Length; i++)
-
 			Image = BitmapSource.Create(src.Width, src.Height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, Bytes, src.Width * 4);
 			src.Bitmap = Image;
+			
 		}
 
 		public void updateHisto()
 		{
+			_histo.Dispose();
 			_histo = new Bitmap(256, 100);
 			int[] pixelIntensity = new int[256];
 			//for(int i = 0; i < 256; i++)
