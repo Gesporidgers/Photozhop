@@ -25,11 +25,14 @@
                 <WindowsFormsHost Width="500" Height="500">
                     <wf:PictureBox x:Name="pictureBox" Dock="Fill" SizeMode="StretchImage" MouseDown="pictureBox_MouseDown" ></wf:PictureBox>
                 </WindowsFormsHost>
+                <WindowsFormsHost Grid.Row="1" Width="500" Height="100">
+                    <wf:PictureBox x:Name="hist" Dock="Fill" SizeMode="StretchImage"></wf:PictureBox>
+                </WindowsFormsHost>
             </Grid>
         </Grid>
         <StackPanel Margin="0 0 0 10" DockPanel.Dock="Bottom" Orientation="Horizontal">
-            <Button Content="Apply" Margin="10 0 20 0" Width="60"></Button>
-            <Button Content="Cancel" Width="60" Click="CloseApply"></Button>
+            <!--<Button Content="Apply" Margin="10 0 20 0" Width="60"></Button>-->
+            <Button Content="Exit" Width="60" Click="CloseApply"></Button>
         </StackPanel>
     </DockPanel>
 </Window>

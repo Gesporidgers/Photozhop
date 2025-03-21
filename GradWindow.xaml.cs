@@ -23,12 +23,14 @@ namespace Photozhop
     {
 		private GradBrainVM vm;
 		private Bitmap curve = new Bitmap(512, 512);
+		
 		public GradWindow(ref ImageModel sourceImage)
 		{
 			vm = new GradBrainVM (ref sourceImage);
 			DataContext = vm;
 			InitializeComponent();
 			pictureBox.Image = curve;
+			hist.Image = vm.Histo;
 			using Graphics g = Graphics.FromImage(curve);
 
 			var p = Pens.Black.Clone() as System.Drawing.Pen;
@@ -36,27 +38,29 @@ namespace Photozhop
 
 			g.DrawLine(p, 0, 0, 0, 500);      // y
 			g.DrawLine(p, 0, 499, 500, 499); // x
-			//g.DrawLines(p, vm.GetPoints());
+			g.DrawLine(p, 0, 512,512,0);
 			
-			pictureBox.Refresh(); p.Dispose();
+			pictureBox.Refresh(); p.Dispose(); hist.Refresh();
 		}
 
 		private void CloseApply(object sender, RoutedEventArgs e)
 		{
 			this.Close();
-
 		}
 
 		private void pictureBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			vm.points.Add(new PointF(e.X / 512f, (512f -e.Y) / 512f));
+			curve.Dispose();
 			curve = new Bitmap(512, 512);
 			Graphics g = Graphics.FromImage(curve);
 			
 			Redraw(ref g);
-			
+			g.Dispose();
 			pictureBox.Image = curve;
 			pictureBox.Refresh();
+			hist.Image = vm.Histo;
+			hist.Refresh();
 		}
 
 		private void Redraw(ref Graphics g)
@@ -67,10 +71,12 @@ namespace Photozhop
 			pEllipse.Width = 2;
 			g.DrawLine(p, 0, 0, 0, 500);      // y
 			g.DrawLine(p, 0, 499, 500, 499); // x
-			//g.DrawLines(p, vm.GetPoints());
-			//foreach (var point in vm.GetPoints()) 
-			//	g.DrawEllipse(pEllipse, point.X, point.Y, 5, 5);
-			p.Dispose();
+			g.DrawLines(p, vm.GetPoints(500,true));
+			foreach (var point in vm.points) 
+			g.DrawEllipse(pEllipse, point.X*500, 500-point.Y*500, 5, 5);
+			p.Dispose(); pEllipse.Dispose();
+
 		}
+
 	}
 }
