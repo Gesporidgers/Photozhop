@@ -75,6 +75,7 @@ namespace Photozhop
 			foreach (var point in vm.points) 
 			g.DrawEllipse(pEllipse, point.X*500, 500-point.Y*500, 5, 5);
 			p.Dispose(); pEllipse.Dispose();
+
 		}
 
 	}
