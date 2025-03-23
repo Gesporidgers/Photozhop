@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Photozhop.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,16 @@ namespace Photozhop
 	/// </summary>
 	public partial class BinarizationWindow : Window
 	{
-		public BinarizationWindow()
+		private BinVM vm;
+		public BinarizationWindow(ref ImageModel image)
 		{
+			vm = new BinVM(ref image);
+			DataContext = vm;
 			InitializeComponent();
+		}
+		private void CloseApply(object sender, RoutedEventArgs e)
+		{
+			this.Close();
 		}
 	}
 }

@@ -69,6 +69,7 @@
                                         <MenuItem Header="Удалить слой" Click="MenuItem_Click"></MenuItem>
                                         <Separator/>
                                         <MenuItem Header="Кривые" Click="OpenGrad"></MenuItem>
+                                        <MenuItem Header="Бинаризация" Click="OpenBin"/>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
                                 

@@ -85,5 +85,14 @@ namespace Photozhop
 			vm.CalcLayers();
 
 		}
+
+		private void OpenBin(object sender, RoutedEventArgs e)
+		{
+			var tmp = e.Source as MenuItem;
+			var par = tmp.DataContext as ImageModel;
+			var ii = vm.Bitmaps.IndexOf(par);
+			BinarizationWindow binarizationWindow = new BinarizationWindow(ref par);
+			binarizationWindow.ShowDialog();
+		}
 	}
 }

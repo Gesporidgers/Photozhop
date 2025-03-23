@@ -5,8 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Photozhop"
         mc:Ignorable="d"
-        Title="BinarizationWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="BinarizationWindow" Height="800" Width="1200">
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="500"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" MaxHeight="710" Source="{Binding Image}"></Image>
+            <GridSplitter Grid.Column="0" HorizontalAlignment="Right" Height="725" Width="1.25"/>
+            <StackPanel Grid.Column="1" >
+                <Label Content="Выберите вид бинаризации:"/>
+                <ComboBox Width="120" HorizontalAlignment="Left" Margin="10,0,0,0"/>
+
+            </StackPanel>
+        </Grid>
+        <StackPanel Margin="0 0 0 10" DockPanel.Dock="Bottom" Orientation="Horizontal">
+            <!--<Button Content="Apply" Margin="10 0 20 0" Width="60"></Button>-->
+            <Button Content="Exit" Width="60" Click="CloseApply"></Button>
+        </StackPanel>
+    </DockPanel>
 </Window>

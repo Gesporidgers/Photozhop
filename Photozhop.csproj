@@ -84,6 +84,7 @@
     <Compile Include="GradWindow.xaml.cs">
       <DependentUpon>GradWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\BinVM.cs" />
     <Compile Include="Models\BrainVM.cs" />
     <Compile Include="Models\GradBrainVM.cs" />
     <Compile Include="Models\ImageModel.cs" />
