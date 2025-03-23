@@ -34,7 +34,7 @@ namespace Photozhop.BinMethods
 			}
 
 			float omega1 = 0f, omega2 = 0f, mu1 = 0f, mu2 = 0f;
-			float sigma = 0f; int threshold;
+			float sigma = 0f; int threshold = 0;
 
 			for (int t = 1; t <= maxI; t++)
 			{
@@ -47,6 +47,22 @@ namespace Photozhop.BinMethods
 				{
 					sigma = sig;
 					threshold = t;
+				}
+			}
+
+			for (int i = 0; i < data.Length; i+=4)
+			{
+				if(data[i] > threshold)
+				{
+					data[i] = 255;
+					data[i + 1] = 255;
+					data[i + 2] = 255;
+				}
+				else
+				{
+					data[i] = 0;
+					data[i + 1] = 0;
+					data[i + 2] = 0;
 				}
 			}
 		}
