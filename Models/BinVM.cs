@@ -13,13 +13,14 @@ namespace Photozhop.Models
 	{
 		private ImageModel _imageModel;
 		private BitmapSource _image;
+
 		public BitmapSource Image
 		{
 			get => _image;
 			set
 			{
 				_image = value;
-				OnPropertyChanged();
+				OnPropertyChanged(nameof(Image));
 			}
 		}
 

@@ -81,6 +81,7 @@
     <Compile Include="BinarizationWindow.xaml.cs">
       <DependentUpon>BinarizationWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BinMethods\GavrMethod.cs" />
     <Compile Include="GradWindow.xaml.cs">
       <DependentUpon>GradWindow.xaml</DependentUpon>
     </Compile>
@@ -89,6 +90,7 @@
     <Compile Include="Models\GradBrainVM.cs" />
     <Compile Include="Models\ImageModel.cs" />
     <Compile Include="Utility\BindHelper.cs" />
+    <Compile Include="Utility\IBinaryzation.cs" />
     <Compile Include="Utility\InterpolatedInterval.cs" />
     <Compile Include="Utility\RelayCommand.cs" />
     <Compile Include="Utility\TaskQueue.cs" />
