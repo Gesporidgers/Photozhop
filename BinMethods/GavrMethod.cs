@@ -15,7 +15,7 @@ namespace Photozhop.BinMethods
 			uint intensity = 0;
 			uint threshold;
 			for (int i = 0; i < data.Length; i += 4)
-				intensity = data[i];
+				intensity += data[i];
 			threshold = (uint)(intensity / data.Length);
 			for (int i = 0; i < data.Length; i += 4)
 			{

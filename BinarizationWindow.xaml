@@ -18,7 +18,7 @@
             <StackPanel Grid.Column="1" >
                 <Label Content="Выберите вид бинаризации:"/>
                 <ComboBox Width="180" HorizontalAlignment="Left" Margin="10,0,0,0" ItemsSource="{Binding Path=DataContext.methods,RelativeSource={RelativeSource AncestorType=Window}}" SelectedValue="{Binding SelectedMethod}" DisplayMemberPath="name"/>
-                <Button Content="Произвести бинаризацию" Margin="10,10,10,0"/>
+                <Button Content="Произвести бинаризацию" Command="{Binding DoBinaryzation}" Margin="10,10,10,0"/>
             </StackPanel>
         </Grid>
         <StackPanel Margin="0 0 0 10" DockPanel.Dock="Bottom" Orientation="Horizontal">
