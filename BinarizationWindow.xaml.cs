@@ -21,9 +21,9 @@ namespace Photozhop
 	public partial class BinarizationWindow : Window
 	{
 		private BinVM vm;
-		public BinarizationWindow(ref ImageModel image)
+		public BinarizationWindow(ImageModel image)
 		{
-			vm = new BinVM(ref image);
+			vm = new BinVM(image);
 			DataContext = vm;
 			InitializeComponent();
 		}

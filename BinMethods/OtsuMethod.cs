@@ -11,7 +11,7 @@ namespace Photozhop.BinMethods
 	internal class OtsuMethod : IBinaryzation
 	{
 		public string name => "Метод Отсу";
-		public void Binaryze(ref byte[] data)
+		public void Binaryze(byte[] data)
 		{
 
 			float[] N = new float[256];

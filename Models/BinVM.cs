@@ -42,7 +42,7 @@ namespace Photozhop.Models
 			}
 		}
 
-		public BinVM(ref ImageModel src)
+		public BinVM(ImageModel src)
 		{
 			this._imageModel = src;
 			this.Image = src.Bitmap;
