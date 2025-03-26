@@ -113,7 +113,7 @@ namespace Photozhop.Models
 			img.PropertyChanged += (s, prop_name) =>
 			{
 				if (prop_name.PropertyName == nameof(ImageModel.Opacity) ||
-					prop_name.PropertyName == nameof(ImageModel.SelectedOperation))
+					prop_name.PropertyName == nameof(ImageModel.SelectedOperation) || prop_name.PropertyName == nameof(ImageModel.Bitmap))
 				{
 					taskQueue.AddTask(new Task(CalcLayers));
 				}
