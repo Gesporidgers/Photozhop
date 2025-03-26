@@ -10,7 +10,7 @@ namespace Photozhop.BinMethods
 	internal class GavrMethod : IBinaryzation
 	{
 		public string name => "Метод Гаврилова";
-		public void Binaryze(byte[] data)
+		public void Binaryze(ref byte[] data)
 		{
 			uint intensity = 0;
 			uint threshold;
