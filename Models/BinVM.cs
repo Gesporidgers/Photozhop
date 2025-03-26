@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
@@ -14,9 +15,10 @@ namespace Photozhop.Models
 {
 	class BinVM : BindHelper
 	{
-		//private ImageModel _imageModel;
+		private ImageModel _imageModel;
 		private BitmapSource _image;
-		public byte[] bytes;
+		private byte[] bytes;
+		private byte[] out_bytes;
 		private IBinaryzation selectedMethod;
 		private ICommand doBinaryzation;
 		private int _width;
@@ -53,17 +55,17 @@ namespace Photozhop.Models
 				return doBinaryzation ??= new RelayCommand((t) => true, (_) =>
 				{
 					GrayScale();
-					SelectedMethod.Binaryze(ref bytes);
-					Image = BitmapSource.Create(_width, _height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, bytes, _width * 4);
+					SelectedMethod.Binaryze(ref out_bytes);
+					Image = BitmapSource.Create(_width, _height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, out_bytes, _width * 4);
 					Image.Freeze();
-					bytes = Array.Empty<byte>();
+					out_bytes = Array.Empty<byte>();
 				});
 			}
 		}
 
 		public BinVM(ImageModel src)
 		{
-			//this._imageModel = src;
+			this._imageModel = src;
 			this.Image = src.Bitmap; this.bytes = src.Bytes;
 			SelectedMethod = methods[0];
 			OnPropertyChanged(nameof(SelectedMethod));
@@ -73,8 +75,12 @@ namespace Photozhop.Models
 
 		private void GrayScale()
 		{
+			out_bytes = new byte[bytes.Length];
 			for (int i = 0; i < bytes.Length; i += 4)
-				bytes[i] = (byte)(0.2125 * bytes[i + 2] + 0.7154 * bytes[i + 1] + 0.0721 * bytes[i]) > 255 ? (byte)255 : (byte)(0.2125 * bytes[i + 2] + 0.7154 * bytes[i + 1] + 0.0721 * bytes[i]);
+			{
+				out_bytes[i] = (byte)(0.2125 * bytes[i + 2] + 0.7154 * bytes[i + 1] + 0.0721 * bytes[i]) > 255 ? (byte)255 : (byte)(0.2125 * bytes[i + 2] + 0.7154 * bytes[i + 1] + 0.0721 * bytes[i]);
+				out_bytes[i + 3] = bytes[i + 3];
+			}
 
 		}
 	}

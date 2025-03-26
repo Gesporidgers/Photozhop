@@ -93,6 +93,7 @@ namespace Photozhop
 			var ii = vm.Bitmaps.IndexOf(par);
 			BinarizationWindow binarizationWindow = new BinarizationWindow(par);
 			binarizationWindow.ShowDialog();
+			
 		}
 	}
 }
