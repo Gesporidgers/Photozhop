@@ -3,8 +3,10 @@ using Photozhop.Utility;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,6 +25,10 @@ namespace Photozhop.Models
 		private ICommand doBinaryzation;
 		private int _width;
 		private int _height;
+		//parameters for niblack
+		private float _k;
+		private int _radius;
+
 		public IBinaryzation SelectedMethod
 		{
 			get => selectedMethod;
@@ -35,7 +41,7 @@ namespace Photozhop.Models
 
 		public List<IBinaryzation> methods => new List<IBinaryzation>
 		{
-			new GavrMethod(), new OtsuMethod()
+			new GavrMethod(), new OtsuMethod(), new NiblackMethod()
 		};
 
 		public BitmapSource Image
@@ -48,6 +54,26 @@ namespace Photozhop.Models
 			}
 		}
 
+		public float K
+		{
+			get => _k;
+			set
+			{
+				_k = value;
+				OnPropertyChanged(nameof(K));
+			}
+		}
+
+		public int Radius
+		{
+			get => _radius;
+			set
+			{
+				_radius = value;
+				OnPropertyChanged(nameof(Radius));
+			}
+		}
+
 		public ICommand DoBinaryzation
 		{
 			get
@@ -55,6 +81,10 @@ namespace Photozhop.Models
 				return doBinaryzation ??= new RelayCommand((t) => true, (_) =>
 				{
 					GrayScale();
+					if(SelectedMethod is NiblackMethod)
+					{
+						((NiblackMethod)SelectedMethod).SetParams(10, -0.2f, _width,_height);
+					}
 					SelectedMethod.Binaryze(ref out_bytes);
 					Image = BitmapSource.Create(_width, _height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, out_bytes, _width * 4);
 					Image.Freeze();
