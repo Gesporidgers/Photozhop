@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -28,6 +29,8 @@ namespace Photozhop.Models
 		//parameters for niblack
 		private float _k;
 		private int _radius;
+		private Visibility _visibility;
+		private Visibility _warningVisibility;
 
 		public IBinaryzation SelectedMethod
 		{
@@ -35,6 +38,14 @@ namespace Photozhop.Models
 			set
 			{
 				selectedMethod = value;
+				if (SelectedMethod is NiblackMethod || SelectedMethod is SauvolaMethod || SelectedMethod is WolfMethod)
+					VisibilityParams = Visibility.Visible;
+				else
+					VisibilityParams = Visibility.Collapsed;
+				if (!(SelectedMethod is WolfMethod) || (_width < 2000 || _height < 2000))
+					WarningVisibility = Visibility.Collapsed;
+				else
+					WarningVisibility = Visibility.Visible;
 				OnPropertyChanged(nameof(SelectedMethod));
 			}
 		}
@@ -54,12 +65,12 @@ namespace Photozhop.Models
 			}
 		}
 
-		public float K
+		public int K
 		{
-			get => _k;
+			get => (int)(_k * 10);
 			set
 			{
-				_k = value;
+				_k = value / 10f;
 				OnPropertyChanged(nameof(K));
 			}
 		}
@@ -74,26 +85,46 @@ namespace Photozhop.Models
 			}
 		}
 
+		public Visibility VisibilityParams
+		{
+			get => _visibility;
+			set
+			{
+				_visibility = value;
+				OnPropertyChanged(nameof(VisibilityParams));
+			}
+		}
+
+		public Visibility WarningVisibility
+		{
+			get => _warningVisibility;
+			set
+			{
+				_warningVisibility = value;
+				OnPropertyChanged(nameof(WarningVisibility));
+			}
+		}
+
 		public ICommand DoBinaryzation
 		{
 			get
 			{
-				return doBinaryzation ??= new RelayCommand((t) => true, (_) =>
+				return doBinaryzation ??= new RelayCommand((t) => !(SelectedMethod is WolfMethod) || (_width < 2000 || _height < 2000), (_) =>
 				{
 					GrayScale();
-					if(SelectedMethod is NiblackMethod)
+					if (SelectedMethod is NiblackMethod)
 					{
-						((NiblackMethod)SelectedMethod).SetParams(10, 0.2f, _width,_height);
+						((NiblackMethod)SelectedMethod).SetParams(Radius, _k, _width, _height);
 					}
 					else if (SelectedMethod is SauvolaMethod)
 					{
-						((SauvolaMethod)SelectedMethod).SetParams(15, 0.2f, _width, _height);
+						((SauvolaMethod)SelectedMethod).SetParams(Radius, _k, _width, _height);
 					}
 					else if (SelectedMethod is WolfMethod)
 					{
-						((WolfMethod)SelectedMethod).SetParams(10, _width, _height);
+						((WolfMethod)SelectedMethod).SetParams(Radius, _width, _height);
 					}
-						SelectedMethod.Binaryze(ref out_bytes);
+					SelectedMethod.Binaryze(ref out_bytes);
 					Image = BitmapSource.Create(_width, _height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, out_bytes, _width * 4);
 					Image.Freeze();
 					out_bytes = Array.Empty<byte>();
@@ -106,6 +137,7 @@ namespace Photozhop.Models
 			this._imageModel = src;
 			this.Image = src.Bitmap; this.bytes = src.Bytes;
 			SelectedMethod = methods[0];
+			this.K = 2; this.Radius = 2;
 			OnPropertyChanged(nameof(SelectedMethod));
 			this._height = src.Height;
 			this._width = src.Width;
