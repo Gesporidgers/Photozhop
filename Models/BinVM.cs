@@ -41,7 +41,7 @@ namespace Photozhop.Models
 
 		public List<IBinaryzation> methods => new List<IBinaryzation>
 		{
-			new GavrMethod(), new OtsuMethod(), new NiblackMethod()
+			new GavrMethod(), new OtsuMethod(), new NiblackMethod(), new SauvolaMethod(), new WolfMethod()
 		};
 
 		public BitmapSource Image
@@ -83,9 +83,17 @@ namespace Photozhop.Models
 					GrayScale();
 					if(SelectedMethod is NiblackMethod)
 					{
-						((NiblackMethod)SelectedMethod).SetParams(10, -0.2f, _width,_height);
+						((NiblackMethod)SelectedMethod).SetParams(10, 0.2f, _width,_height);
 					}
-					SelectedMethod.Binaryze(ref out_bytes);
+					else if (SelectedMethod is SauvolaMethod)
+					{
+						((SauvolaMethod)SelectedMethod).SetParams(15, 0.2f, _width, _height);
+					}
+					else if (SelectedMethod is WolfMethod)
+					{
+						((WolfMethod)SelectedMethod).SetParams(10, _width, _height);
+					}
+						SelectedMethod.Binaryze(ref out_bytes);
 					Image = BitmapSource.Create(_width, _height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, out_bytes, _width * 4);
 					Image.Freeze();
 					out_bytes = Array.Empty<byte>();

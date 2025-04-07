@@ -84,9 +84,11 @@
     <Compile Include="BinarizationWindow.xaml.cs">
       <DependentUpon>BinarizationWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BinMethods\WolfMethod.cs" />
     <Compile Include="BinMethods\GavrMethod.cs" />
     <Compile Include="BinMethods\NiblackMethod.cs" />
     <Compile Include="BinMethods\OtsuMethod.cs" />
+    <Compile Include="BinMethods\SauvolaMethod.cs" />
     <Compile Include="GradWindow.xaml.cs">
       <DependentUpon>GradWindow.xaml</DependentUpon>
     </Compile>
