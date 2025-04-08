@@ -21,14 +21,22 @@ namespace Photozhop
 	public partial class BinarizationWindow : Window
 	{
 		private BinVM vm;
-		public BinarizationWindow(ImageModel image)
+		public BinarizationWindow(ref ImageModel image)
 		{
-			vm = new BinVM(image);
+			vm = new BinVM(ref image);
 			DataContext = vm;
 			InitializeComponent();
 		}
+		private void Close(object sender, RoutedEventArgs e)
+		{
+			DialogResult = false;
+			this.Close();
+		}
+
 		private void CloseApply(object sender, RoutedEventArgs e)
 		{
+			DialogResult = true;
+			vm.ApplyData();
 			this.Close();
 		}
 	}

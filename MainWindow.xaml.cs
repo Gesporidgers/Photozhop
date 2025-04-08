@@ -91,9 +91,9 @@ namespace Photozhop
 			var tmp = e.Source as MenuItem;
 			var par = tmp.DataContext as ImageModel;
 			var ii = vm.Bitmaps.IndexOf(par);
-			BinarizationWindow binarizationWindow = new BinarizationWindow(par);
-			binarizationWindow.ShowDialog();
-			
+			BinarizationWindow binarizationWindow = new BinarizationWindow(ref par);
+			if ((bool)binarizationWindow.ShowDialog())
+				vm.Bitmaps[ii]= par;
 		}
 	}
 }

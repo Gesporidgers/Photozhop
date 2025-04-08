@@ -132,7 +132,7 @@ namespace Photozhop.Models
 			}
 		}
 
-		public BinVM(ImageModel src)
+		public BinVM(ref ImageModel src)
 		{
 			this._imageModel = src;
 			this.Image = src.Bitmap; this.bytes = src.Bytes;
@@ -153,5 +153,7 @@ namespace Photozhop.Models
 			}
 
 		}
+
+		public void ApplyData() => _imageModel.Bitmap = this.Image;
 	}
 }
