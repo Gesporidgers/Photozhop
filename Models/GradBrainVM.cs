@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Photozhop.Utility;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
-using System;
-using System.Windows.Media.Imaging;
-using Photozhop.Utility;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 //using MathNet.Numerics.LinearAlgebra;
 
@@ -188,13 +188,13 @@ namespace Photozhop.Models
 		public void UpdateImage()
 		{
 			Bytes = new byte[src.Bytes.Length];
-			src.Bytes.CopyTo(Bytes,0);
+			src.Bytes.CopyTo(Bytes, 0);
 			Point[] newPixelInt = GetPoints(255, false);
 			Parallel.For(0, Bytes.Length, (i) => { Bytes[i] = (byte)(newPixelInt[(int)Bytes[i]].Y); });
 			//for (int i = 0; i < Bytes.Length; i++)
 			Image = BitmapSource.Create(src.Width, src.Height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, Bytes, src.Width * 4);
-			
-			
+
+
 		}
 
 		public void updateHisto()

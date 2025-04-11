@@ -1,6 +1,5 @@
-﻿using Photozhop.Utility;
-using MathNet.Numerics.Statistics;
-using System;
+﻿using MathNet.Numerics.Statistics;
+using Photozhop.Utility;
 using System.Threading.Tasks;
 
 namespace Photozhop.BinMethods
@@ -15,7 +14,7 @@ namespace Photozhop.BinMethods
 		private int height;
 		public void Binaryze(ref byte[] data)
 		{
-			byte[] copy =new byte[data.Length]; data.CopyTo(copy, 0);
+			byte[] copy = new byte[data.Length]; data.CopyTo(copy, 0);
 			byte[] data_copy = new byte[data.Length]; data.CopyTo(data_copy, 0);
 			copy[0] = (byte)(255 - data[0]);
 			int size = width * height;

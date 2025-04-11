@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Security;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -154,7 +152,7 @@ namespace Photozhop.Models
 			var props = (from b in Bitmaps
 						 select new
 						 {
-							 op = b.Opacity/100,
+							 op = b.Opacity / 100,
 							 w = b.Width,
 							 h = b.Height,
 							 so = b.SelectedOperation

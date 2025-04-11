@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MathNet.Numerics.Statistics;
+﻿using MathNet.Numerics.Statistics;
 using Photozhop.Utility;
+using System;
+using System.Threading.Tasks;
 
 namespace Photozhop.BinMethods
 {
-    class WolfMethod : IBinaryzation
-    {
+	class WolfMethod : IBinaryzation
+	{
 		public string name => "Метод Кристиана Вульфа";
 		private int radius;
 		private byte[] data;

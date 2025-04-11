@@ -1,10 +1,4 @@
 ﻿using Photozhop.Utility;
-using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Photozhop.BinMethods
 {
@@ -38,7 +32,7 @@ namespace Photozhop.BinMethods
 
 			for (int t = 1; t <= maxI; t++)
 			{
-				omega1 = N[t-1];
+				omega1 = N[t - 1];
 				omega2 = 1f - omega1;
 				mu1 = sum_iN[t - 1] / omega1;
 				mu2 = (sum_iN[maxI] - mu1 * omega1) / omega2;
@@ -50,9 +44,9 @@ namespace Photozhop.BinMethods
 				}
 			}
 
-			for (int i = 0; i < data.Length; i+=4)
+			for (int i = 0; i < data.Length; i += 4)
 			{
-				if(data[i] > threshold)
+				if (data[i] > threshold)
 				{
 					data[i] = 255;
 					data[i + 1] = 255;

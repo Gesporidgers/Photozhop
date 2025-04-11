@@ -1,16 +1,11 @@
 ﻿using MathNet.Numerics.Statistics;
 using Photozhop.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Photozhop.BinMethods
 {
-    class SauvolaMethod : IBinaryzation
-    {
+	class SauvolaMethod : IBinaryzation
+	{
 		public string name => "Метод Сауволы";
 		private int radius;
 		private float k;

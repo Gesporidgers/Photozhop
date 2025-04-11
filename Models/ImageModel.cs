@@ -1,11 +1,4 @@
 ﻿using Photozhop.Utility;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace Photozhop.Models
@@ -20,7 +13,7 @@ namespace Photozhop.Models
 		public int Height { get; set; }
 		public double Opacity
 		{
-			get => _opacity*100;
+			get => _opacity * 100;
 			set
 			{
 				_opacity = value / 100;
@@ -64,7 +57,7 @@ namespace Photozhop.Models
 				convertedBitmap.CopyPixels(b, stride, 0);
 				_bitmap = new BitmapImage(); Bytes = b;
 				BitmapSource source = BitmapSource.Create(convertedBitmap.PixelWidth, convertedBitmap.PixelHeight, convertedBitmap.DpiX, convertedBitmap.DpiY,
-					convertedBitmap.Format,convertedBitmap.Palette,b,stride);
+					convertedBitmap.Format, convertedBitmap.Palette, b, stride);
 				_bitmap = source;
 				Width = source.PixelWidth;
 				Height = source.PixelHeight;
