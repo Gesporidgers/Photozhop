@@ -27,15 +27,14 @@ namespace Photozhop.BinMethods
 				sum_iN[i] = sum_i;
 			}
 
-			double omega1 = 0f, omega2 = 0f, mu1 = 0f, mu2 = 0f;
 			double sigma = 0f; int threshold = 0;
 
 			for (int t = 1; t <= maxI; t++)
 			{
-				omega1 = N[t - 1];
-				omega2 = 1f - omega1;
-				mu1 = sum_iN[t - 1] / omega1;
-				mu2 = (sum_iN[maxI] - mu1 * omega1) / omega2;
+				double omega1 = N[t - 1];
+				double omega2 = 1f - omega1;
+				double mu1 = sum_iN[t - 1] / omega1;
+				double mu2 = (sum_iN[maxI] - mu1 * omega1) / omega2;
 				double sig = omega1 * omega2 * (mu1 - mu2) * (mu1 - mu2);
 				if (sig > sigma)
 				{

@@ -20,7 +20,7 @@ namespace Photozhop.BinMethods
 			int size = width * height; byte minI = 255;
 			double maxSig = 0.0;
 			//for (int i = 0; i < size; i++)
-			Parallel.For(0, size, (i) =>
+			_ = Parallel.For(0, size, (i) =>
 			{
 				(int, int) x_rad = (radius, radius);
 				(int, int) y_rad = x_rad;
@@ -36,7 +36,7 @@ namespace Photozhop.BinMethods
 				uint len = (uint)((x_rad.Item1 + x_rad.Item2 + 1) * (y_rad.Item1 + y_rad.Item2 + 1));
 				double[] range = new double[len];
 				int ii = 0;
-				double MX, DX, si;
+				double MX, si;
 				for (int _x = x - x_rad.Item1; _x <= x + x_rad.Item2; _x++)
 				{
 					for (int _y = y - y_rad.Item1; _y <= y + y_rad.Item2; _y++)

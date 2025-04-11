@@ -50,8 +50,10 @@ namespace Photozhop.Models
 		{
 			this.src = src; this.Image = src.Bitmap;
 			this.Bytes = src.Bytes;
-			points = new ObservableCollection<PointF>();
-			points.Add(new PointF(0, 0));
+			points = new ObservableCollection<PointF>
+			{
+				new PointF(0, 0)
+			};
 			updateHisto();
 			points.CollectionChanged += (s, e) =>
 			{
@@ -172,7 +174,7 @@ namespace Photozhop.Models
 		public Point[] GetPoints(int k, bool invertY)
 		{
 			Point[] ps = new Point[InterpolatedPoints.Length];
-			Parallel.For(0, ps.Length, (i) =>
+			_ = Parallel.For(0, ps.Length, (i) =>
 			{
 				ps[i] = new Point((int)(InterpolatedPoints[i].X * k), invertY ? (int)((1 - InterpolatedPoints[i].Y) * k) : (int)(InterpolatedPoints[i].Y * k));
 				//if (ps[i].X == 0 && i != 0)
@@ -190,7 +192,7 @@ namespace Photozhop.Models
 			Bytes = new byte[src.Bytes.Length];
 			src.Bytes.CopyTo(Bytes, 0);
 			Point[] newPixelInt = GetPoints(255, false);
-			Parallel.For(0, Bytes.Length, (i) => { Bytes[i] = (byte)(newPixelInt[(int)Bytes[i]].Y); });
+			_ = Parallel.For(0, Bytes.Length, (i) => { Bytes[i] = (byte)(newPixelInt[(int)Bytes[i]].Y); });
 			//for (int i = 0; i < Bytes.Length; i++)
 			Image = BitmapSource.Create(src.Width, src.Height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, Bytes, src.Width * 4);
 
@@ -203,7 +205,7 @@ namespace Photozhop.Models
 			_histo = new Bitmap(256, 100);
 			int[] pixelIntensity = new int[256];
 			//for(int i = 0; i < 256; i++)
-			Parallel.For(0, src.Width * src.Height, (i) =>
+			_ = Parallel.For(0, src.Width * src.Height, (i) =>
 			{
 				int y = i / src.Width;
 				int x = i - y * src.Height;

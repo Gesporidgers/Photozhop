@@ -33,7 +33,7 @@ namespace Photozhop
 			}
 			else
 			{
-				MessageBox.Show("Невозможно переместить слой! Слой уже находится на верхнем положении", "Ошибка перемещения", MessageBoxButton.OK, MessageBoxImage.Error);
+				_ = MessageBox.Show("Невозможно переместить слой! Слой уже находится на верхнем положении", "Ошибка перемещения", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 
 		}
@@ -49,7 +49,7 @@ namespace Photozhop
 			}
 			else
 			{
-				MessageBox.Show("Невозможно переместить слой! Слой уже находится на нижнем положении", "Ошибка перемещения", MessageBoxButton.OK, MessageBoxImage.Error);
+				_ = MessageBox.Show("Невозможно переместить слой! Слой уже находится на нижнем положении", "Ошибка перемещения", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 
 		}
@@ -58,7 +58,7 @@ namespace Photozhop
 		{
 			var tmp = e.Source as MenuItem;
 			var par = tmp.DataContext as ImageModel;
-			vm.Bitmaps.Remove(par);
+			_ = vm.Bitmaps.Remove(par);
 		}
 
 		private void OpenGrad(object sender, RoutedEventArgs e)

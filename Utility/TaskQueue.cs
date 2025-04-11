@@ -16,14 +16,14 @@ namespace Photozhop.Utility
 				if (tasks.Count > 0)
 				{
 					Task t = tasks.Last();
-					int i = tasks.IndexOf(t);
+					_ = tasks.IndexOf(t);
 
 					t.RunSynchronously();
 
 					tasks.Clear();
 				}
 				if (tasks.Count == 0)
-					queue.Wait(1);
+					_ = queue.Wait(1);
 			}
 		}
 

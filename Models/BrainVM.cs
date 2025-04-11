@@ -76,8 +76,10 @@ namespace Photozhop.Models
 			{
 				return openCommand ??= new RelayCommand(t => true, (obj) =>
 				{
-					OpenFileDialog openFileDialog = new OpenFileDialog();
-					openFileDialog.Filter = "Изображения (*png; *jpg)|*png; *jpg";
+					OpenFileDialog openFileDialog = new OpenFileDialog
+					{
+						Filter = "Изображения (*png; *jpg)|*png; *jpg"
+					};
 					if (openFileDialog.ShowDialog() == true)
 					{
 						AddImage(new ImageModel { Bitmap = new BitmapImage(new Uri(openFileDialog.FileName)), Name = openFileDialog.SafeFileName });
@@ -92,9 +94,11 @@ namespace Photozhop.Models
 			{
 				return saveCommand ??= new RelayCommand(t => Bitmaps.Count != 0, (obj) =>
 				{
-					SaveFileDialog fileDialog = new SaveFileDialog();
-					fileDialog.DefaultExt = ".png";
-					fileDialog.Filter = "Изображения (*png)|*png";
+					SaveFileDialog fileDialog = new SaveFileDialog
+					{
+						DefaultExt = ".png",
+						Filter = "Изображения (*png)|*png"
+					};
 					if ((bool)fileDialog.ShowDialog())
 					{
 						using var fs = new FileStream(fileDialog.FileName, FileMode.Create);
@@ -116,7 +120,7 @@ namespace Photozhop.Models
 					taskQueue.AddTask(new Task(CalcLayers));
 				}
 			};
-			Task.Delay(1);
+			_ = Task.Delay(1);
 			Bitmaps.Add(img);
 		}
 
@@ -165,7 +169,7 @@ namespace Photozhop.Models
 				Array.Clear(bytes, 0, bytes.Length);
 
 			//for (int i = 0; i<max_height*max_width;++i)
-			Parallel.For(0, max_height * max_width, (i) =>
+			_ = Parallel.For(0, max_height * max_width, (i) =>
 			{
 				int y = i / max_width;
 				int x = i - y * max_width;
