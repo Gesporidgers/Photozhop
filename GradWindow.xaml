@@ -31,8 +31,8 @@
             </Grid>
         </Grid>
         <StackPanel Margin="0 0 0 10" DockPanel.Dock="Bottom" Orientation="Horizontal">
-            <!--<Button Content="Apply" Margin="10 0 20 0" Width="60"></Button>-->
-            <Button Content="Exit" Width="60" Click="CloseApply"></Button>
+            <Button Content="Apply" Margin="10 0 20 0" Width="60" Click="CloseApply"></Button>
+            <Button Content="Exit" Width="60" Click="Close"></Button>
         </StackPanel>
     </DockPanel>
 </Window>

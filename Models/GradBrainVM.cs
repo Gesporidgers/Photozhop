@@ -187,12 +187,13 @@ namespace Photozhop.Models
 
 		public void UpdateImage()
 		{
-			Bytes = src.Bytes;
+			Bytes = new byte[src.Bytes.Length];
+			src.Bytes.CopyTo(Bytes,0);
 			Point[] newPixelInt = GetPoints(255, false);
 			Parallel.For(0, Bytes.Length, (i) => { Bytes[i] = (byte)(newPixelInt[(int)Bytes[i]].Y); });
 			//for (int i = 0; i < Bytes.Length; i++)
 			Image = BitmapSource.Create(src.Width, src.Height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, Bytes, src.Width * 4);
-			src.Bitmap = Image;
+			
 			
 		}
 
@@ -222,6 +223,11 @@ namespace Photozhop.Models
 				g.DrawLine(p, i, 99, i, 99 - pixelIntensity[i] * k);
 			p.Dispose();
 			g.Dispose(); Bytes = Array.Empty<byte>();
+		}
+
+		public void ApplyData()
+		{
+			src.Bitmap = Image;
 		}
 	}
 }

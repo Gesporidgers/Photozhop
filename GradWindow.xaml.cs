@@ -43,8 +43,16 @@ namespace Photozhop
 			pictureBox.Refresh(); p.Dispose(); hist.Refresh();
 		}
 
+		private void Close(object sender, RoutedEventArgs e)
+		{
+			DialogResult = false;
+			this.Close();
+		}
+
 		private void CloseApply(object sender, RoutedEventArgs e)
 		{
+			DialogResult = true;
+			vm.ApplyData();
 			this.Close();
 		}
 

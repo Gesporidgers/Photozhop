@@ -80,9 +80,8 @@ namespace Photozhop
 			var par = tmp.DataContext as ImageModel;
 			var ii = vm.Bitmaps.IndexOf(par);
 			GradWindow gradWindow = new GradWindow(ref par);
-			if (gradWindow.ShowDialog() == true)
-				vm.Bitmaps[ii]= par;
-			vm.CalcLayers();
+			if ((bool)gradWindow.ShowDialog())
+				vm.Bitmaps[ii] = par;
 
 		}
 
