@@ -84,7 +84,10 @@ namespace Photozhop
 
 		private void MenuItem_Click_1(object sender, RoutedEventArgs e)
 		{
-			MatrixWindow matrixWindow = new MatrixWindow();
+			var tmp = e.Source as MenuItem;
+			var par = tmp.DataContext as ImageModel;
+			var ii = vm.Bitmaps.IndexOf(par);
+			MatrixWindow matrixWindow = new MatrixWindow(ref par);
 			matrixWindow.Show();
 		}
 	}

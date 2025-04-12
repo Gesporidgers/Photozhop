@@ -106,6 +106,7 @@
     <Compile Include="Utility\BindHelper.cs" />
     <Compile Include="Utility\IBinaryzation.cs" />
     <Compile Include="Utility\InterpolatedInterval.cs" />
+    <Compile Include="Utility\Mathematics.cs" />
     <Compile Include="Utility\RelayCommand.cs" />
     <Compile Include="Utility\TaskQueue.cs" />
     <Page Include="BinarizationWindow.xaml">

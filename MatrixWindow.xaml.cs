@@ -21,9 +21,9 @@ namespace Photozhop
     public partial class MatrixWindow : Window
     {
         private MatrixTransformVM vm;
-        public MatrixWindow()
+        public MatrixWindow(ref ImageModel image)
         {
-            vm = new MatrixTransformVM();
+            vm = new MatrixTransformVM(ref image);
             DataContext = vm;
             InitializeComponent();
         }
