@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 
 namespace Photozhop.Models
 {
@@ -13,7 +14,7 @@ namespace Photozhop.Models
 	{
 		private ImageModel src;
 		private BitmapSource _image;
-		private float[,] _array = new float[5, 5];
+		private float[,] _array = new float[3, 3];
 		private byte[] data;
 		private ICommand applyFilter;
 		private string _filter;
@@ -67,7 +68,7 @@ namespace Photozhop.Models
 							MatrixTransform();
 							break;
 						case "Median Blur":
-							//MedianBlur();
+							MedianBlur();
 							break;
 						default:
 							break;
@@ -117,6 +118,51 @@ namespace Photozhop.Models
 				data_copy[i * 4 + 2] = (byte)Math.Round(rSum, 0);
 
 			}); Image = BitmapSource.Create(src.Width, src.Height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, data_copy, src.Width * 4);
+			Image.Freeze();
+		}
+
+		public void MedianBlur()
+		{
+			int size = src.Width * src.Height;
+			byte[] data_copy = new byte[src.Bytes.Length];
+			src.Bytes.CopyTo(data_copy, 0);
+			Parallel.For(0, size, (i) =>
+			//for (int i = 0; i < size; i++)
+			{
+				(int, int) x_rad = (_array.GetLength(0) / 2, _array.GetLength(1) / 2);
+				(int, int) y_rad = x_rad;
+				int y = i / src.Width;
+				int x = i - y * src.Width;
+				int _i = y * src.Width + x;
+
+				if (x - x_rad.Item1 < 0) x_rad.Item1 = x;
+				if (x + x_rad.Item2 >= src.Width) x_rad.Item2 = src.Width - x - 1;
+				if (y - y_rad.Item1 < 0) y_rad.Item1 = y;
+				if (y + y_rad.Item2 >= src.Height) y_rad.Item2 = src.Height - y - 1;
+				uint len = (uint)((x_rad.Item1 + x_rad.Item2 + 1) * (y_rad.Item1 + y_rad.Item2 + 1));
+				byte[] rangeB = new byte[len];
+				byte[] rangeG = new byte[len];
+				byte[] rangeR = new byte[len];
+				int ii = 0;
+				for (int _x = x - x_rad.Item1; _x <= x + x_rad.Item2; _x++)
+				{
+					for (int _y = y - y_rad.Item1; _y <= y + y_rad.Item2; _y++)
+					{
+						_i = _y * src.Width + _x;
+						rangeB[ii] = src.Bytes[_i * 4];
+						rangeG[ii] = src.Bytes[_i * 4 + 1];
+						rangeR[ii] = src.Bytes[_i * 4 + 2];
+						ii++;
+					}
+				}
+				MathNet.Numerics.Sorting.Sort(rangeB);
+				MathNet.Numerics.Sorting.Sort(rangeG);
+				MathNet.Numerics.Sorting.Sort(rangeR);
+				data_copy[i * 4] = rangeB[rangeB.Length / 2];
+				data_copy[i * 4 + 1] = rangeG[rangeG.Length / 2];
+				data_copy[i * 4 + 2] = rangeR[rangeR.Length / 2];
+			});
+			Image = BitmapSource.Create(src.Width, src.Height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, data_copy, src.Width * 4);
 			Image.Freeze();
 		}
 	}
