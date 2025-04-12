@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Photozhop"
+        xmlns:viewmodel="clr-namespace:Photozhop.Models"
+        xmlns:dataGrid2D ="http://gu.se/DataGrid2D"
         mc:Ignorable="d"
         Title="MatrixWindow" Height="450" Width="800">
     <Grid>
-        
+        <DataGrid HeadersVisibility="None"
+                  dataGrid2D:ItemsSource.Array2D="{Binding Path=Array}" Width="100" Height="100"/>
+
     </Grid>
 </Window>

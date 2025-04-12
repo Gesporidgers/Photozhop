@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Photozhop.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,8 +20,11 @@ namespace Photozhop
     /// </summary>
     public partial class MatrixWindow : Window
     {
+        private MatrixTransformVM vm;
         public MatrixWindow()
         {
+            vm = new MatrixTransformVM();
+            DataContext = vm;
             InitializeComponent();
         }
     }

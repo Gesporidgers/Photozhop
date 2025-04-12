@@ -70,7 +70,7 @@
                                         <Separator/>
                                         <MenuItem Header="Кривые" Click="OpenGrad"></MenuItem>
                                         <MenuItem Header="Бинаризация" Click="OpenBin"/>
-                                        <MenuItem Header="Фильтр" Click="MenuItem_Click_1"
+                                        <MenuItem Header="Фильтр" Click="MenuItem_Click_1"/>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
                                 
