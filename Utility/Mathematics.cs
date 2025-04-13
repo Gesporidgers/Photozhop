@@ -6,23 +6,13 @@ using System.Threading.Tasks;
 
 namespace Photozhop.Utility
 {
-    class Mathematics
-    {
-        public static float Clamp(float value, float min, float max)
+	class Mathematics
+	{
+		public static T Clamp<T>(T value, T min, T max) where T : IComparable<T>
 		{
-			if (value > max)
+			if (value.CompareTo(max) > 0)
 				return max;
-			else if (value < min)
-				return min;
-			else
-				return value;
-		}
-
-		public static byte Clamp(byte value, byte min, byte max)
-		{
-			if (value > max)
-				return max;
-			else if (value < min)
+			else if (value.CompareTo(min) < 0)
 				return min;
 			else
 				return value;
