@@ -2,19 +2,43 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
+using System.IO;
 
 namespace Photozhop.Models
 {
+	internal class Gauss
+	{
+		[DllImport("GaussCoeff.dll", CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Unicode)]
+		private extern static IntPtr GaussCoeff();
+
+		[DllImport("GaussCoeff.dll", CallingConvention = CallingConvention.Cdecl, SetLastError = true, CharSet = CharSet.Unicode)]
+		private extern static void FreeGaussCoeff(IntPtr ptr);
+		public static double[,] GetGaussCoeff()
+		{
+			IntPtr ptr = GaussCoeff();
+			double[] result = new double[169];
+			Marshal.Copy(ptr, result, 0, 169);
+			double[,] array2D = new double[13, 13];
+			for (int i=0; i < 169; i++)
+			{
+				array2D[array2D.GetLength(0) - 1 - i / 13, i % 13] = result[i];
+			}
+			FreeGaussCoeff(ptr);
+			return array2D;
+		}
+	}
+
 	class MatrixTransformVM : BindHelper
 	{
 		private ImageModel src;
 		private BitmapSource _image;
-		private float[,] _array = new float[3, 3];
+		private double[,] _array = new double[3, 3];
 		private byte[] data;
 		private ICommand applyFilter;
 		private string _filter;
@@ -22,8 +46,8 @@ namespace Photozhop.Models
 		private ICommand updateSize;
 		private int radius = 3;
 
-		public string[] Filters => new string[] { "Matrix Transform", "Median Blur" };
-		public float[,] Array
+		public string[] Filters => new string[] { "Matrix Transform", "Median Blur", "GaussianBlur" };
+		public double[,] Array
 		{
 			get => _array;
 			set
@@ -58,7 +82,7 @@ namespace Photozhop.Models
 			get => _filter;
 			set
 			{
-				if (value == "Matrix Transform")
+				if (value == "Matrix Transform" || value == "GaussianBlur")
 					MatEnabled = true;
 				else
 					MatEnabled = false;
@@ -97,6 +121,9 @@ namespace Photozhop.Models
 						case "Median Blur":
 							MedianBlur();
 							break;
+						case "GaussianBlur":
+							MatrixTransform();
+							break;
 						default:
 							break;
 					}
@@ -112,7 +139,12 @@ namespace Photozhop.Models
 				return updateSize ??= new RelayCommand((_) => MatEnabled, (_) =>
 				{
 					if (Filter == "Matrix Transform")
-						Array = new float[Radius, Radius];
+						Array = new double[Radius, Radius];
+					if (Filter == "GaussianBlur")
+					{
+						Array = Gauss.GetGaussCoeff();
+					}
+						
 				});
 			}
 		}
@@ -131,7 +163,7 @@ namespace Photozhop.Models
 				int x = i - y * src.Width;
 				int up = y - _array.GetLength(0) / 2, down = y + _array.GetLength(0) / 2;
 				int left = x - _array.GetLength(1) / 2, right = x + _array.GetLength(1) / 2;
-				float bSum = 0f, gSum = 0f, rSum = 0f;
+				double bSum = 0f, gSum = 0f, rSum = 0f;
 				for (int a = up; a <= down; a++)
 				{
 					int Y = a;
