@@ -18,6 +18,9 @@ namespace Photozhop.Models
 		private byte[] data;
 		private ICommand applyFilter;
 		private string _filter;
+		private bool _matEnabled;
+		private ICommand updateSize;
+		private int radius = 3;
 
 		public string[] Filters => new string[] { "Matrix Transform", "Median Blur" };
 		public float[,] Array
@@ -30,11 +33,35 @@ namespace Photozhop.Models
 			}
 		}
 
+		public bool MatEnabled
+		{
+			get => _matEnabled;
+			set
+			{
+				_matEnabled = value;
+				OnPropertyChanged(nameof(MatEnabled));
+			}
+		}
+
+		public int Radius
+		{
+			get => radius;
+			set
+			{
+				radius = value;
+				OnPropertyChanged(nameof(Radius));
+			}
+		}
+
 		public string Filter
 		{
 			get => _filter;
 			set
 			{
+				if (value == "Matrix Transform")
+					MatEnabled = true;
+				else
+					MatEnabled = false;
 				_filter = value;
 				OnPropertyChanged(nameof(Filter));
 			}
@@ -74,6 +101,18 @@ namespace Photozhop.Models
 							break;
 					}
 
+				});
+			}
+		}
+
+		public ICommand AdjustMatrixDimensions
+		{
+			get
+			{
+				return updateSize ??= new RelayCommand((_) => MatEnabled, (_) =>
+				{
+					if (Filter == "Matrix Transform")
+						Array = new float[Radius, Radius];
 				});
 			}
 		}
@@ -129,7 +168,7 @@ namespace Photozhop.Models
 			Parallel.For(0, size, (i) =>
 			//for (int i = 0; i < size; i++)
 			{
-				(int, int) x_rad = (_array.GetLength(0) / 2, _array.GetLength(1) / 2);
+				(int, int) x_rad = (Radius / 2, Radius / 2);
 				(int, int) y_rad = x_rad;
 				int y = i / src.Width;
 				int x = i - y * src.Width;
