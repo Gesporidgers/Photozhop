@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.IO;
+using static System.Environment;
 
 namespace Photozhop.Models
 {
@@ -45,6 +46,7 @@ namespace Photozhop.Models
 		private bool _matEnabled;
 		private ICommand updateSize;
 		private int radius = 3;
+		private bool _readonlyMat = false;
 
 		public string[] Filters => new string[] { "Matrix Transform", "Median Blur", "GaussianBlur" };
 		public double[,] Array
@@ -67,6 +69,16 @@ namespace Photozhop.Models
 			}
 		}
 
+		public bool ReadOnlyMat
+		{
+			get => _readonlyMat;
+			set
+			{
+				_readonlyMat = value;
+				OnPropertyChanged(nameof(ReadOnlyMat));
+			}
+		}
+
 		public int Radius
 		{
 			get => radius;
@@ -86,6 +98,13 @@ namespace Photozhop.Models
 					MatEnabled = true;
 				else
 					MatEnabled = false;
+				if (value == "GaussianBlur")
+				{
+					ReadOnlyMat = true;
+					Array = Gauss.GetGaussCoeff();
+				}
+				else
+					ReadOnlyMat = false;
 				_filter = value;
 				OnPropertyChanged(nameof(Filter));
 			}
@@ -136,15 +155,10 @@ namespace Photozhop.Models
 		{
 			get
 			{
-				return updateSize ??= new RelayCommand((_) => MatEnabled, (_) =>
+				return updateSize ??= new RelayCommand((_) => MatEnabled && !ReadOnlyMat, (_) =>
 				{
 					if (Filter == "Matrix Transform")
-						Array = new double[Radius, Radius];
-					if (Filter == "GaussianBlur")
-					{
-						Array = Gauss.GetGaussCoeff();
-					}
-						
+						Array = new double[Radius, Radius];	
 				});
 			}
 		}
@@ -156,7 +170,11 @@ namespace Photozhop.Models
 			byte[] data_copy = new byte[src.Bytes.Length];
 			src.Bytes.CopyTo(data_copy, 0);
 			//src.Bytes.CopyTo(data, 0);
-			Parallel.For(0, size, (i) =>
+			var opt = new ParallelOptions();
+			if (ProcessorCount > 2)
+				opt.MaxDegreeOfParallelism = ProcessorCount - 2;
+			else opt.MaxDegreeOfParallelism = 1;
+			Parallel.For(0, size, opt,(i) =>
 			//for (int i = 0; i < size; i++)
 			{
 				int y = i / src.Width;
