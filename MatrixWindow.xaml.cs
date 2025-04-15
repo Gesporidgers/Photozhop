@@ -27,5 +27,13 @@ namespace Photozhop
             DataContext = vm;
             InitializeComponent();
         }
+
+
+        private void CloseApply(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
+            vm.ApplyData();
+            this.Close();
+        }
     }
 }

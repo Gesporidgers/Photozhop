@@ -26,7 +26,7 @@ namespace Photozhop.Models
 			double[] result = new double[169];
 			Marshal.Copy(ptr, result, 0, 169);
 			double[,] array2D = new double[13, 13];
-			for (int i=0; i < 169; i++)
+			for (int i = 0; i < 169; i++)
 			{
 				array2D[array2D.GetLength(0) - 1 - i / 13, i % 13] = result[i];
 			}
@@ -158,7 +158,7 @@ namespace Photozhop.Models
 				return updateSize ??= new RelayCommand((_) => MatEnabled && !ReadOnlyMat, (_) =>
 				{
 					if (Filter == "Matrix Transform")
-						Array = new double[Radius, Radius];	
+						Array = new double[Radius, Radius];
 				});
 			}
 		}
@@ -174,7 +174,7 @@ namespace Photozhop.Models
 			if (ProcessorCount > 2)
 				opt.MaxDegreeOfParallelism = ProcessorCount - 2;
 			else opt.MaxDegreeOfParallelism = 1;
-			Parallel.For(0, size, opt,(i) =>
+			Parallel.For(0, size, opt, (i) =>
 			//for (int i = 0; i < size; i++)
 			{
 				int y = i / src.Width;
@@ -254,5 +254,7 @@ namespace Photozhop.Models
 			Image = BitmapSource.Create(src.Width, src.Height, 96, 96, System.Windows.Media.PixelFormats.Bgra32, null, data_copy, src.Width * 4);
 			Image.Freeze();
 		}
+
+		public void ApplyData() => src.Bitmap = Image;
 	}
 }

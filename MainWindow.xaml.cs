@@ -88,7 +88,8 @@ namespace Photozhop
 			var par = tmp.DataContext as ImageModel;
 			var ii = vm.Bitmaps.IndexOf(par);
 			MatrixWindow matrixWindow = new MatrixWindow(ref par);
-			matrixWindow.Show();
+			if ((bool)matrixWindow.ShowDialog())
+				vm.Bitmaps[ii] = par;
 		}
 	}
 }
