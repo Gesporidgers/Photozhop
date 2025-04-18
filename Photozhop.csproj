@@ -108,6 +108,9 @@
     <Compile Include="BinMethods\NiblackMethod.cs" />
     <Compile Include="BinMethods\OtsuMethod.cs" />
     <Compile Include="BinMethods\SauvolaMethod.cs" />
+    <Compile Include="FurryWindow.xaml.cs">
+      <DependentUpon>FurryWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GradWindow.xaml.cs">
       <DependentUpon>GradWindow.xaml</DependentUpon>
     </Compile>
@@ -120,12 +123,17 @@
     <Compile Include="Models\ImageModel.cs" />
     <Compile Include="Models\MatrixTransformVM.cs" />
     <Compile Include="Utility\BindHelper.cs" />
+    <Compile Include="Utility\FFT.cs" />
     <Compile Include="Utility\IBinaryzation.cs" />
     <Compile Include="Utility\InterpolatedInterval.cs" />
     <Compile Include="Utility\Mathematics.cs" />
     <Compile Include="Utility\RelayCommand.cs" />
     <Compile Include="Utility\TaskQueue.cs" />
     <Page Include="BinarizationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FurryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
