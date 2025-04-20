@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -64,6 +65,40 @@ namespace Photozhop.Utility
 				for (int k = 0; k < width; k++)
 					X[i + k * width] = tmp[k] / height;
 			});
+			return X;
+		}
+
+		public static Complex[] ditifft(Complex[] arr, int width, int height)
+		{
+			Complex[] X = new Complex[arr.Length];
+			ParallelOptions opt = new ParallelOptions();
+			if (Environment.ProcessorCount > 2)
+				opt.MaxDegreeOfParallelism = Environment.ProcessorCount - 1;
+			else
+				opt.MaxDegreeOfParallelism = 1;
+
+			Parallel.For(0, height, opt, (i) =>
+			{
+				Complex[] tmp = new Complex[width];
+				Array.Copy(arr, i * width, tmp, 0, width);
+
+				for (int k = 0; k < width; k++)
+					tmp[k] = new Complex(arr[i * width + k].Real, arr[i * width + k].Imaginary);
+				tmp = ditfft(tmp, 0, width, 1);
+
+			});
+
+			Parallel.For(0, width, opt, (i) =>
+			{
+				Complex[] tmp = new Complex[height];
+				for (int k = 0; k < height; k++)
+					tmp[k] = new Complex(X[k * width + i].Real, X[k * width + i].Imaginary);
+				tmp = ditfft(arr, 0, height, 1);
+
+				for (int k = 0; k < height; k++)
+					X[i + k * width] = new Complex(tmp[k].Real, -tmp[k].Imaginary);
+			});
+
 			return X;
 		}
 	}
