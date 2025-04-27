@@ -71,6 +71,7 @@
                                         <MenuItem Header="Кривые" Click="OpenGrad"></MenuItem>
                                         <MenuItem Header="Бинаризация" Click="OpenBin"/>
                                         <MenuItem Header="Фильтр" Click="MenuItem_Click_1"/>
+                                        <MenuItem Header="Фурри" Click="MenuItem_Click_2"/>
                                     </ContextMenu>
                                 </Grid.ContextMenu>
                                 

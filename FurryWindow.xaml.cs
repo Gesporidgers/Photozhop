@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Photozhop.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,8 +20,11 @@ namespace Photozhop
     /// </summary>
     public partial class FurryWindow : Window
     {
-        public FurryWindow()
+        private FurryVM furry;
+        public FurryWindow(ref ImageModel img)
         {
+            furry = new FurryVM(ref img);
+            DataContext = furry;
             InitializeComponent();
         }
     }

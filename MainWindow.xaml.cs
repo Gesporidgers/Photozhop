@@ -91,5 +91,13 @@ namespace Photozhop
 			if ((bool)matrixWindow.ShowDialog())
 				vm.Bitmaps[ii] = par;
 		}
+
+		private void MenuItem_Click_2(object sender, RoutedEventArgs e)
+		{
+			var tmp = e.Source as MenuItem;
+			var par = tmp.DataContext as ImageModel;
+			FurryWindow furry = new FurryWindow(ref par);
+			furry.ShowDialog();
+		}
 	}
 }

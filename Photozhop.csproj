@@ -119,6 +119,7 @@
     </Compile>
     <Compile Include="Models\BinVM.cs" />
     <Compile Include="Models\BrainVM.cs" />
+    <Compile Include="Models\FurryVM.cs" />
     <Compile Include="Models\GradBrainVM.cs" />
     <Compile Include="Models\ImageModel.cs" />
     <Compile Include="Models\MatrixTransformVM.cs" />

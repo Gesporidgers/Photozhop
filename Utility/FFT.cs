@@ -43,7 +43,7 @@ namespace Photozhop.Utility
 			else
 				opt.MaxDegreeOfParallelism = 1;
 
-			Parallel.For(0, width, opt, (i) =>
+			Parallel.For(0, height, opt, (i) =>
 			{
 				Complex[] tmp = new Complex[width];
 				Array.Copy(arr, i * width, tmp, 0, width);
@@ -55,20 +55,20 @@ namespace Photozhop.Utility
 				}
 			});
 
-			Parallel.For(0, height, opt, (i) =>
+			Parallel.For(0, width, opt, (i) =>
 			{
 				Complex[] tmp = new Complex[height];
 				for (int k = 0; k < height; k++)
 					tmp[k] = X[i + k * width];
 
 				tmp = ditfft(tmp, 0, tmp.Length, 1);
-				for (int k = 0; k < width; k++)
+				for (int k = 0; k < height; ++k)
 					X[i + k * width] = tmp[k] / height;
 			});
 			return X;
 		}
 
-		public static Complex[] ditifft(Complex[] arr, int width, int height)
+		public static Complex[] ditifft2d(Complex[] arr, int width, int height)
 		{
 			Complex[] X = new Complex[arr.Length];
 			ParallelOptions opt = new ParallelOptions();

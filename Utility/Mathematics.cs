@@ -17,5 +17,7 @@ namespace Photozhop.Utility
 			else
 				return value;
 		}
+
+		public static double F(double x) => Math.Log(x+1);
 	}
 }
