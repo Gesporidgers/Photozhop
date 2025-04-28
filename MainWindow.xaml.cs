@@ -81,5 +81,15 @@ namespace Photozhop
 			if ((bool)binarizationWindow.ShowDialog())
 				vm.Bitmaps[ii] = par;
 		}
+
+		private void MenuItem_Click_1(object sender, RoutedEventArgs e)
+		{
+			var tmp = e.Source as MenuItem;
+			var par = tmp.DataContext as ImageModel;
+			var ii = vm.Bitmaps.IndexOf(par);
+			MatrixWindow matrixWindow = new MatrixWindow(ref par);
+			if ((bool)matrixWindow.ShowDialog())
+				vm.Bitmaps[ii] = par;
+		}
 	}
 }
