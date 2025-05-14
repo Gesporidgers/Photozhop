@@ -72,13 +72,13 @@ namespace Photozhop.Models
 			b.CopyTo(bytes, 0);
 
 			Complex[] complexes = new Complex[new_width * new_height];
-			for (int color = 0; color < 2; color++)
+			for (int color = 0; color < 3; color++)
 			{
 				for (int i  = 0; i < new_width * new_height; i++)
 				{
 					int y = i / new_width;
 					int x = i % new_width;
-					complexes[i] = Math.Pow(-1,x+y) * bytes[i*3+color];
+					complexes[i] = Math.Pow(-1,x+y) * bytes[i*4+color];
 				}
 
 				complexes = FFT.ditfft2d(complexes,new_width,new_height);
